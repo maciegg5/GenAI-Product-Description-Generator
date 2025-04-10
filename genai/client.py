@@ -3,16 +3,16 @@ import requests
 BASE_URL = "http://127.0.0.1:8000"
 
 def add_product():
-    name = input("Podaj nazwę produktu: ")
-    category = input("Podaj kategorię produktu: ")
+    name = input("Enter product name: ")
+    category = input("Enter product category: ")
     payload = {"name": name, "category": category}
     try:
         res = requests.post(f"{BASE_URL}/products", json=payload)
         res.raise_for_status()
-        print("\n✅ Produkt dodany!")
+        print("\n✅ Product added!")
         print(res.json())
     except requests.exceptions.RequestException as e:
-        print("❌ Błąd przy dodawaniu produktu:", e)
+        print("❌ Error adding product:", e)
 
 def list_products():
     try:
@@ -20,39 +20,39 @@ def list_products():
         res.raise_for_status()
         products = res.json()
         if products:
-            print("\n📦 Lista produktów:")
+            print("\n📦 Product list:")
             for p in products:
                 print(f"- {p['name']} ({p['category']}): {p['description']}")
         else:
-            print("\n🔍 Brak produktów w bazie.")
+            print("\n🔍 No products in the database.")
     except requests.exceptions.RequestException as e:
-        print("❌ Błąd przy pobieraniu produktów:", e)
+        print("❌ Error fetching products:", e)
 
 def filter_by_category():
-    category = input("Podaj kategorię: ")
+    category = input("Enter category: ")
     try:
         res = requests.get(f"{BASE_URL}/products/{category}")
         res.raise_for_status()
         products = res.json()
-        print(f"\n🔎 Produkty w kategorii '{category}':")
+        print(f"\n🔎 Products in category '{category}':")
         for p in products:
             print(f"- {p['name']} ({p['category']}): {p['description']}")
     except requests.exceptions.HTTPError as e:
         if res.status_code == 404:
-            print("⚠️ Nie znaleziono produktów w tej kategorii.")
+            print("⚠️ No products found in this category.")
         else:
-            print("❌ Błąd:", e)
+            print("❌ Error:", e)
     except requests.exceptions.RequestException as e:
-        print("❌ Błąd przy wyszukiwaniu:", e)
+        print("❌ Error searching:", e)
 
 def main():
     while True:
         print("\n📘 MENU:")
-        print("1. Dodaj produkt")
-        print("2. Wyświetl wszystkie produkty")
-        print("3. Filtruj produkty po kategorii")
-        print("0. Wyjście")
-        choice = input("Wybierz opcję: ")
+        print("1. Add product")
+        print("2. View all products")
+        print("3. Filter products by category")
+        print("0. Exit")
+        choice = input("Choose an option: ")
 
         if choice == "1":
             add_product()
@@ -61,10 +61,10 @@ def main():
         elif choice == "3":
             filter_by_category()
         elif choice == "0":
-            print("👋 Zakończono.")
+            print("👋 Exiting.")
             break
         else:
-            print("❌ Nieprawidłowy wybór.")
+            print("❌ Invalid choice.")
 
 if __name__ == "__main__":
     main()
